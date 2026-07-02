@@ -22,14 +22,14 @@ You can support this project by making a donation to help ensure its sustainabil
 
 ## Key Features
 
-- **High-Performance Recoloring:** Optimized for maximum throughput, delivering up to **3× faster** icon recoloring than conventional solutions, depending on hardware and workload.
-- **100% Lossless Output:** Recolors icons without altering pixel positions, transparency, or image quality, ensuring pixel-perfect results every time.
-- **Perfect Transparency Preservation:** Preserves every alpha value exactly, maintaining smooth edges, anti-aliasing, and the original visual appearance.
-- **Universal Image Compatibility:** Supports images of any bit depth and automatically converts them to a 32-bit ARGB format for consistent, high-quality recoloring.
-- **Real-Time Live Preview:** Instantly previews color changes, allowing users to visualize the final result before applying the transformation.
-- **Consistent Pixel Accuracy:** Only the visible color channels are updated while the underlying image structure remains completely unchanged.
-- **Built for Scale:** Designed to efficiently process both individual icons and large icon collections with consistent performance.
-- **Modern Color Picker Interface:** A sleek and user-friendly color picker that supports all popular color models in RGB or HEX format. Quickly find and apply the color you want.
+* **High-Performance Recoloring:** Optimized for maximum throughput, delivering up to **3× faster** icon recoloring than conventional solutions, depending on hardware and workload.
+* **100% Lossless Output:** Recolors icons without altering pixel positions, transparency, or image quality, ensuring pixel-perfect results every time.
+* **Perfect Transparency Preservation:** Preserves every alpha value exactly, maintaining smooth edges, anti-aliasing, and the original visual appearance.
+* **Universal Image Compatibility:** Supports images of any bit depth and automatically converts them to a 32-bit ARGB format for consistent, high-quality recoloring.
+* **Real-Time Live Preview:** Instantly previews color changes, allowing users to visualize the final result before applying the transformation.
+* **Consistent Pixel Accuracy:** Only the visible color channels are updated while the underlying image structure remains completely unchanged.
+* **Built for Scale:** Designed to efficiently process both individual icons and large icon collections with consistent performance.
+* **Modern Color Picker Interface:** A sleek and user-friendly color picker that supports all popular color models in RGB or HEX format. Quickly find and apply the color you want.
 * **Multilingual:** It supports 15 different languages, primarily English. You can access the supported languages here: [Supported Languages](https://github.com/turkaysoft/walpa/discussions/1)
 * **Modern UI:** Clean, intuitive interface compatible with Windows 11 design language, featuring Light, Dark, and System themes.
 * **Built-in Update Mechanism:** It features a built-in smart update mechanism developed specifically by **Türkaysoft**.
