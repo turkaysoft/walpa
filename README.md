@@ -5,12 +5,43 @@
 [![GitHub release](https://img.shields.io/github/v/release/turkaysoft/walpa?style=flat&color=5a32a3&label=Latest%20Release)](https://github.com/turkaysoft/walpa/releases/latest)
 [![Platform](https://img.shields.io/badge/platform-Windows-b31d28?style=flat&label=Platform)](https://github.com/turkaysoft/walpa)
 
+**Walpa** is a high-performance, lossless icon recoloring software developed by **Eray Türkay**. It is engineered to recolor raster icons with maximum efficiency while preserving the original image with pixel-perfect accuracy.
+
+Unlike conventional image processing solutions that rely on per-pixel color transformations or blending operations, Walpa directly overwrites the RGB channels of every visible pixel while leaving the **alpha channel completely untouched**. This ensures that the original transparency, anti-aliasing, edge quality, and pixel layout remain **100% identical** to the source image.
+
+The engine operates directly on bitmap memory using **unsafe native pointer arithmetic** and **low-level memory manipulation**, eliminating the overhead associated with high-level pixel access methods. Combined with **parallel scanline processing**, Walpa maximizes memory throughput and can deliver **up to 3× faster** icon recoloring performance than conventional recoloring solutions, depending on image size, hardware, and workload.
+
 ---
 
 ### Donate
 You can support this project by making a donation to help ensure its sustainability and the development of new features.
 
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-0a6628?style=flat&logo=buy-me-a-coffee&logoColor=white)](https://buymeacoffee.com/turkaysoft)
+
+---
+
+## Key Features
+
+- **High-Performance Recoloring:** Optimized for maximum throughput, delivering up to **3× faster** icon recoloring than conventional solutions, depending on hardware and workload.
+- **100% Lossless Output:** Recolors icons without altering pixel positions, transparency, or image quality, ensuring pixel-perfect results every time.
+- **Perfect Transparency Preservation:** Preserves every alpha value exactly, maintaining smooth edges, anti-aliasing, and the original visual appearance.
+- **Universal Image Compatibility:** Supports images of any bit depth and automatically converts them to a 32-bit ARGB format for consistent, high-quality recoloring.
+- **Real-Time Live Preview:** Instantly previews color changes, allowing users to visualize the final result before applying the transformation.
+- **Consistent Pixel Accuracy:** Only the visible color channels are updated while the underlying image structure remains completely unchanged.
+- **Built for Scale:** Designed to efficiently process both individual icons and large icon collections with consistent performance.
+* **Multilingual:** It supports 15 different languages, primarily English. You can access the supported languages here: [Supported Languages](https://github.com/turkaysoft/walpa/discussions/1)
+* **Modern UI:** Clean, intuitive interface compatible with Windows 11 design language, featuring Light, Dark, and System themes.
+* **Built-in Update Mechanism:** It features a built-in smart update mechanism developed specifically by **Türkaysoft**.
+
+---
+
+## Interface Preview
+
+_Coming soon..._
+
+## Modern Color Picker
+
+_Coming soon..._
 
 ---
 
