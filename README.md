@@ -22,6 +22,9 @@ You can support this project by making a donation to help ensure its sustainabil
 
 ## Key Features
 
+* **Privacy First:** Your data stays on your machine; no information is transferred to external servers.
+* **Pure Performance:** Developed exclusively in C# and .NET Framework with no external libraries or dependencies.
+* **Portable:** No installation required. Just download it, extract all files from the ZIP, select the appropriate architecture, and run it.
 * **High-Performance Recoloring:** Optimized for maximum throughput, delivering up to **3× faster** icon recoloring than conventional solutions, depending on hardware and workload.
 * **100% Lossless Output:** Recolors icons without altering pixel positions, transparency, or image quality, ensuring pixel-perfect results every time.
 * **Perfect Transparency Preservation:** Preserves every alpha value exactly, maintaining smooth edges, anti-aliasing, and the original visual appearance.
