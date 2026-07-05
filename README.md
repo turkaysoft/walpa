@@ -1,4 +1,4 @@
-# Walpa - Lossless Icon Colorizer
+# Walpa - Lossless Icon Colorizer Software
 
 [![GitHub downloads](https://img.shields.io/github/downloads/turkaysoft/walpa/total?style=flat&color=1a893c&label=Downloads)](https://github.com/turkaysoft/walpa/releases)
 [![GitHub stars](https://img.shields.io/github/stars/turkaysoft/walpa?style=flat&color=0062cc&label=Stars)](https://github.com/turkaysoft/walpa/stargazers)
