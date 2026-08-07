@@ -166,7 +166,7 @@ namespace Walpa{
         private void WalpaMain_Load(object sender, EventArgs e){
             Text = TS_VersionEngine.TS_SoftwareVersion(0);
             HeaderMenu.Cursor = Cursors.Hand;
-            // LOAD MODULE
+            // LOAD MODULE PRELOAD
             RunSoftwareEngine();
             //
             Task softwareUpdateCheck = Task.Run(() => Software_update_check(0));
@@ -218,8 +218,9 @@ namespace Walpa{
         // IMAGE PROCESSOR
         // ======================================================================================================
         private Image LoadImageFromFile(string filePath){
-            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read)){
-                return Image.FromStream(fs);
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (var temp = Image.FromStream(fs)){
+                return new Bitmap(temp);
             }
         }
         // REFRESH LIST VIEW MODE
@@ -731,15 +732,16 @@ namespace Walpa{
         }
         // LANGUAGES SETTINGS
         // ======================================================================================================
+        private ToolStripMenuItem selected_lang = null;
         private void Select_lang_active(object target_lang){
-            ToolStripMenuItem selected_lang = null;
+            if (target_lang == null)
+                return;
+            ToolStripMenuItem clicked_lang = (ToolStripMenuItem)target_lang;
+            if (selected_lang == clicked_lang)
+                return;
             Select_lang_deactive();
-            if (target_lang != null){
-                if (selected_lang != (ToolStripMenuItem)target_lang){
-                    selected_lang = (ToolStripMenuItem)target_lang;
-                    selected_lang.Checked = true;
-                }
-            }
+            selected_lang = clicked_lang;
+            selected_lang.Checked = true;
         }
         private void Select_lang_deactive(){
             foreach (ToolStripMenuItem disabled_lang in languageToolStripMenuItem.DropDownItems){
@@ -844,15 +846,16 @@ namespace Walpa{
         }
         // STARTUP SETINGS
         // ======================================================================================================
+        private ToolStripMenuItem selected_startup_mode = null;
         private void Select_startup_mode_active(object target_startup_mode){
-            ToolStripMenuItem selected_startup_mode = null;
+            if (target_startup_mode == null)
+                return;
+            ToolStripMenuItem clicked_startup_mode = (ToolStripMenuItem)target_startup_mode;
+            if (selected_startup_mode == clicked_startup_mode)
+                return;
             Select_startup_mode_deactive();
-            if (target_startup_mode != null){
-                if (selected_startup_mode != (ToolStripMenuItem)target_startup_mode){
-                    selected_startup_mode = (ToolStripMenuItem)target_startup_mode;
-                    selected_startup_mode.Checked = true;
-                }
-            }
+            selected_startup_mode = clicked_startup_mode;
+            selected_startup_mode.Checked = true;
         }
         private void Select_startup_mode_deactive(){
             foreach (ToolStripMenuItem disabled_startup in startupToolStripMenuItem.DropDownItems){
@@ -873,15 +876,16 @@ namespace Walpa{
         }
         // LIST VIEW SETINGS
         // ======================================================================================================
+        private ToolStripMenuItem selected_listview_mode = null;
         private void Select_listview_mode_active(object target_listview_mode){
-            ToolStripMenuItem selected_listview_mode = null;
+            if (target_listview_mode == null)
+                return;
+            ToolStripMenuItem clicked_listview_mode = (ToolStripMenuItem)target_listview_mode;
+            if (selected_listview_mode == clicked_listview_mode)
+                return;
             Select_listview_mode_deactive();
-            if (target_listview_mode != null){
-                if (selected_listview_mode != (ToolStripMenuItem)target_listview_mode){
-                    selected_listview_mode = (ToolStripMenuItem)target_listview_mode;
-                    selected_listview_mode.Checked = true;
-                }
-            }
+            selected_listview_mode = clicked_listview_mode;
+            selected_listview_mode.Checked = true;
         }
         private void Select_listview_mode_deactive(){
             foreach (ToolStripMenuItem disabled_listview in listViewModeToolStripMenuItem.DropDownItems){
