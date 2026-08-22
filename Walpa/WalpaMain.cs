@@ -169,7 +169,7 @@ namespace Walpa{
             // LOAD MODULE PRELOAD
             RunSoftwareEngine();
             //
-            Task softwareUpdateCheck = Task.Run(() => Software_update_check(0));
+            Task.Run(() => Software_update_check(0));
         }
         // MODULE
         // ======================================================================================================
