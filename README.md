@@ -41,12 +41,11 @@ You can support this project by making a donation to help ensure its sustainabil
 
 ## Interface Preview
 
-<img width="1010" height="633" alt="Walpa UI" src="https://github.com/user-attachments/assets/abc6adf2-384c-4b28-a420-385137b74d7c" />
-
+<img width="1010" height="633" alt="Walpa UI" src="https://github.com/user-attachments/assets/ba8efd6c-cdb5-4b50-9049-e94f0d021683" />
 
 ## Modern Color Picker
 
-<img width="636" height="493" alt="Walpa Color Picker" src="https://github.com/user-attachments/assets/c4b167bc-3516-4d64-83d5-f60d1eb9aa77" />
+<img width="636" height="493" alt="Walpa Color Picker" src="https://github.com/user-attachments/assets/a3c6a6a1-1a03-4150-8797-b780c5f151dc" />
 
 ---
 
