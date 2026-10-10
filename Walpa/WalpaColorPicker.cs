@@ -53,6 +53,14 @@ namespace Walpa{
         }
         // LOAD
         // ======================================================================================================
+        protected override void OnDpiChanged(DpiChangedEventArgs e){
+            base.OnDpiChanged(e);
+            try{
+                Walpa_Color_Picker_Preloader();
+                this.PerformLayout();
+                this.Invalidate(true);
+            }catch{ }
+        }
         private void WalpaColorPicker_Load(object sender, EventArgs e){
             Walpa_Color_Picker_Preloader();
             _colorSelected = false;

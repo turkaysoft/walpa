@@ -54,8 +54,9 @@ namespace Walpa{
             russianToolStripMenuItem.Click += LanguageToolStripMenuItem_Click;
             spanishToolStripMenuItem.Click += LanguageToolStripMenuItem_Click;
             turkishToolStripMenuItem.Click += LanguageToolStripMenuItem_Click;
-            //
-            SystemEvents.UserPreferenceChanged += (s, e) => TSUseSystemTheme();
+            // DYNAMIC THEME LISTENER
+            // ==================
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             //
             PB_Before.SizeMode = PictureBoxSizeMode.Zoom;
             PB_After.SizeMode = PictureBoxSizeMode.Zoom;
@@ -75,7 +76,7 @@ namespace Walpa{
             protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e){
                 Graphics g = e.Graphics;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
-                float dpiScale = g.DpiX / 96f;
+                float dpiScale = TSDpiHelper.Scale(g.DpiX);
                 Rectangle rect = e.ImageRectangle;
                 using (Pen anti_alias_pen = new Pen(header_colors[2], 2.2f * dpiScale)){
                     anti_alias_pen.StartCap = LineCap.Round;
@@ -89,6 +90,8 @@ namespace Walpa{
             }
         }
         private class HeaderColors : ProfessionalColorTable{
+            public override Color MenuStripGradientBegin => header_colors[0];
+            public override Color MenuStripGradientEnd => header_colors[0];
             public override Color MenuItemSelected => header_colors[0];
             public override Color ToolStripDropDownBackground => header_colors[0];
             public override Color ImageMarginGradientBegin => header_colors[0];
@@ -111,6 +114,7 @@ namespace Walpa{
         // LOAD SOFTWARE SETTINGS
         // ======================================================================================================
         private void RunSoftwareEngine(){
+            try { TSDpiHelper.ScaleToolStripRecursive(HeaderMenu, this.DeviceDpi); } catch { }
             // DOUBLE BUFFER TABLE LAYOUT PANEL
             typeof(TableLayoutPanel).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, TLP_Buttons, new object[] { true });
             typeof(TableLayoutPanel).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, TLP_PictureBox, new object[] { true });
@@ -161,6 +165,24 @@ namespace Walpa{
         // MAIN TOOLTIP SETTINGS
         // ======================================================================================================
         private void MainToolTip_Draw(object sender, DrawToolTipEventArgs e){ e.DrawBackground(); e.DrawBorder(); e.DrawText(); }
+        // DPI SCALING
+        // ======================================================================================================
+        private void ApplyDpiScaling(){
+            if (IsDisposed || Disposing) return;
+            TSDpiHelper.ScaleToolStripRecursive(HeaderMenu, this.DeviceDpi);
+        }
+        protected override void OnDpiChanged(DpiChangedEventArgs e){
+            base.OnDpiChanged(e);
+            try{
+                this.SuspendLayout();
+                ApplyDpiScaling();
+                if (e.DeviceDpiNew != e.DeviceDpiOld)
+                    Theme_engine(theme);
+                this.ResumeLayout(true);
+                this.PerformLayout();
+                this.Invalidate(true);
+            }catch{ }
+        }
         // LOAD
         // ======================================================================================================
         private void WalpaMain_Load(object sender, EventArgs e){
@@ -168,8 +190,10 @@ namespace Walpa{
             HeaderMenu.Cursor = Cursors.Hand;
             // LOAD MODULE PRELOAD
             RunSoftwareEngine();
-            //
-            Task.Run(() => Software_update_check(0));
+            ApplyDpiScaling();
+            // SOFTWARE UPDATE CHECK NATIVE
+            // ====================================
+            try { _ = Software_update_check(0); } catch (Exception) { }
         }
         // MODULE
         // ======================================================================================================
@@ -598,7 +622,18 @@ namespace Walpa{
         private void DarkThemeToolStripMenuItem_Click(object sender, EventArgs e){
             themeSystem = 0; Theme_engine(0); SaveTheme(0); Select_theme_active(sender);
         }
-        private void TSUseSystemTheme() { if (themeSystem == 2) Theme_engine(TSThemeModeHelper.GetSystemTheme(2)); }
+        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e){
+            TSUseSystemTheme();
+        }
+        private void TSUseSystemTheme(){
+            if (themeSystem != 2) return;
+            if (IsDisposed || Disposing) return;
+            if (InvokeRequired){
+                try { BeginInvoke(new Action(() => TSUseSystemTheme())); } catch { }
+                return;
+            }
+            Theme_engine(TSThemeModeHelper.GetSystemTheme(2));
+        }
         private void SaveTheme(int ts){
             // SAVE CURRENT THEME
             try{
@@ -608,20 +643,21 @@ namespace Walpa{
         }
         private void Theme_engine(int ts){
             try{
+                try { TSDpiHelper.ScaleToolStripRecursive(HeaderMenu, this.DeviceDpi); } catch { }
                 theme = ts;
                 //
                 TSThemeModeHelper.SetThemeMode(ts == 0);
                 TSThemeModeHelper.InitializeThemeForForm(this);
                 //
                 if (theme == 1){
-                    TSImageRenderer(settingsToolStripMenuItem, Properties.Resources.tm_settings_light, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(themeToolStripMenuItem, Properties.Resources.tm_theme_light, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(languageToolStripMenuItem, Properties.Resources.tm_language_light, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(startupToolStripMenuItem, Properties.Resources.tm_startup_light, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(listViewModeToolStripMenuItem, Properties.Resources.tm_listview_light, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(checkforUpdatesToolStripMenuItem, Properties.Resources.tm_update_light, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(donateToolStripMenuItem, Properties.Resources.tm_donate_light, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(aboutToolStripMenuItem, Properties.Resources.tm_about_light, 0, ContentAlignment.MiddleRight);
+                    TSImageRenderer(settingsToolStripMenuItem, Properties.Resources.tm_settings_light, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(themeToolStripMenuItem, Properties.Resources.tm_theme_light, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(languageToolStripMenuItem, Properties.Resources.tm_language_light, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(startupToolStripMenuItem, Properties.Resources.tm_startup_light, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(listViewModeToolStripMenuItem, Properties.Resources.tm_listview_light, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(checkForUpdatesToolStripMenuItem, Properties.Resources.tm_update_light, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(donateToolStripMenuItem, Properties.Resources.tm_donate_light, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(aboutToolStripMenuItem, Properties.Resources.tm_about_light, 0, ContentAlignment.MiddleCenter);
                     //
                     TSImageRenderer(BtnClearList, Properties.Resources.ct_clean_light, 17, ContentAlignment.MiddleRight);
                     TSImageRenderer(BtnSelect, Properties.Resources.ct_file_light, 17, ContentAlignment.MiddleRight);
@@ -629,14 +665,14 @@ namespace Walpa{
                     TSImageRenderer(BtnSaveLocation, Properties.Resources.ct_save_light, 17, ContentAlignment.MiddleRight);
                     TSImageRenderer(BtnConvert, Properties.Resources.ct_convert_light, 15, ContentAlignment.MiddleRight);
                 }else if (theme == 0){
-                    TSImageRenderer(settingsToolStripMenuItem, Properties.Resources.tm_settings_dark, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(themeToolStripMenuItem, Properties.Resources.tm_theme_dark, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(languageToolStripMenuItem, Properties.Resources.tm_language_dark, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(startupToolStripMenuItem, Properties.Resources.tm_startup_dark, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(listViewModeToolStripMenuItem, Properties.Resources.tm_listview_dark, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(checkforUpdatesToolStripMenuItem, Properties.Resources.tm_update_dark, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(donateToolStripMenuItem, Properties.Resources.tm_donate_dark, 0, ContentAlignment.MiddleRight);
-                    TSImageRenderer(aboutToolStripMenuItem, Properties.Resources.tm_about_dark, 0, ContentAlignment.MiddleRight);
+                    TSImageRenderer(settingsToolStripMenuItem, Properties.Resources.tm_settings_dark, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(themeToolStripMenuItem, Properties.Resources.tm_theme_dark, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(languageToolStripMenuItem, Properties.Resources.tm_language_dark, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(startupToolStripMenuItem, Properties.Resources.tm_startup_dark, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(listViewModeToolStripMenuItem, Properties.Resources.tm_listview_dark, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(checkForUpdatesToolStripMenuItem, Properties.Resources.tm_update_dark, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(donateToolStripMenuItem, Properties.Resources.tm_donate_dark, 0, ContentAlignment.MiddleCenter);
+                    TSImageRenderer(aboutToolStripMenuItem, Properties.Resources.tm_about_dark, 0, ContentAlignment.MiddleCenter);
                     //
                     TSImageRenderer(BtnClearList, Properties.Resources.ct_clean_dark, 17, ContentAlignment.MiddleRight);
                     TSImageRenderer(BtnSelect, Properties.Resources.ct_file_dark, 17, ContentAlignment.MiddleRight);
@@ -660,7 +696,7 @@ namespace Walpa{
                 // CONTENT BG
                 BackColor = TS_ThemeEngine.ColorMode(theme, "TSBT_BGColor");
                 //
-                foreach (Control control_items in BackPanel.Controls){
+                foreach (Control control_items in this.Controls){
                     if (control_items is TSCustomListBox ui_list){
                         ui_list.BackColor = TS_ThemeEngine.ColorMode(theme, "TSBT_BGColor2");
                         ui_list.ForeColor = TS_ThemeEngine.ColorMode(theme, "TSBT_LabelColor1");
@@ -686,7 +722,7 @@ namespace Walpa{
                     }
                 }
                 //
-                var allButtons = BackPanel.Controls.Cast<Control>().Concat(TLP_Buttons.Controls.Cast<Control>());
+                var allButtons = this.Controls.Cast<Control>().Concat(TLP_Buttons.Controls.Cast<Control>());
                 foreach (Control control_items in allButtons){
                     if (control_items is TSCustomButton ui_button){
                         ui_button.ForeColor = TS_ThemeEngine.ColorMode(theme, "DynamicThemeActiveBtnBGColor");
@@ -806,7 +842,7 @@ namespace Walpa{
                 fileNameToolStripMenuItem.Text = software_lang.TSReadLangs("HeaderListViewMode", "header_list_view_mode_file_name");
                 fullPathToolStripMenuItem.Text = software_lang.TSReadLangs("HeaderListViewMode", "header_list_view_mode_full_path");
                 // UPDATE CHECK
-                checkforUpdatesToolStripMenuItem.Text = software_lang.TSReadLangs("HeaderMenu", "header_menu_update");
+                checkForUpdatesToolStripMenuItem.Text = software_lang.TSReadLangs("HeaderMenu", "header_menu_update");
                 // DONATE
                 donateToolStripMenuItem.Text = software_lang.TSReadLangs("HeaderMenu", "header_menu_donate");
                 // ABOUT
@@ -906,10 +942,12 @@ namespace Walpa{
         }
         // UPDATE CHECK ENGINE
         // ======================================================================================================
-        private void CheckforUpdatesToolStripMenuItem_Click(object sender, EventArgs e){
-            Task.Run(() => Software_update_check(1));
+        private void CheckForUpdatesToolStripMenuItem_Click(object sender, EventArgs e){
+            try{
+                _ = Software_update_check(1);
+            }catch (Exception){ }
         }
-        public async void Software_update_check(int _check_update_ui){
+        public async Task Software_update_check(int _check_update_ui){
             try{
                 TSGetLangs software_lang = new TSGetLangs(lang_path);
                 SetUpdateMenuEnabled(false);
@@ -966,18 +1004,23 @@ namespace Walpa{
                 }
             }catch (Exception ex){
                 Debug.WriteLine(ex, "Software_update_check()");
-                TSGetLangs software_lang = new TSGetLangs(lang_path);
-                TS_MessageBoxEngine.TS_MessageBox(this, 3, string.Format(software_lang.TSReadLangs("SoftwareUpdate", "su_error"), "\n\n", ex.Message), string.Format(software_lang.TSReadLangs("SoftwareUpdate", "su_title"), Application.ProductName));
+                if (_check_update_ui == 1 && !IsDisposed && !Disposing){
+                    TSGetLangs software_lang = new TSGetLangs(lang_path);
+                    TS_MessageBoxEngine.TS_MessageBox(this, 3, string.Format(software_lang.TSReadLangs("SoftwareUpdate", "su_error"), "\n\n", ex.Message), string.Format(software_lang.TSReadLangs("SoftwareUpdate", "su_title"), Application.ProductName));
+                }
             }finally{
                 SetUpdateMenuEnabled(true);
             }
         }
         private void SetUpdateMenuEnabled(bool enabled){
-            if (InvokeRequired){
-                BeginInvoke(new Action(() => checkforUpdatesToolStripMenuItem.Enabled = enabled));
-            }else{
-                checkforUpdatesToolStripMenuItem.Enabled = enabled;
-            }
+            try{
+                if (IsDisposed || Disposing) return;
+                if (InvokeRequired){
+                    BeginInvoke(new Action(() => checkForUpdatesToolStripMenuItem.Enabled = enabled));
+                }else{
+                    checkForUpdatesToolStripMenuItem.Enabled = enabled;
+                }
+            }catch { }
         }
         // TS TOOL LAUNCHER MODULE
         // ======================================================================================================
@@ -1012,6 +1055,7 @@ namespace Walpa{
         // EXIT
         // ======================================================================================================
         private void WalpaMain_FormClosing(object sender, FormClosingEventArgs e){
+            try { SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged; } catch { }
             Application.Exit();
         }
     }
